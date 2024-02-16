@@ -26,6 +26,7 @@ import org.apiguardian.api.API.Status;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
 import com.navercorp.fixturemonkey.api.arbitrary.CombinableArbitrary;
 import com.navercorp.fixturemonkey.api.experimental.TypedPropertySelector;
+import com.navercorp.fixturemonkey.api.property.PropertySelector;
 
 @API(since = "0.6.12", status = Status.MAINTAINED)
 public interface ExperimentalArbitraryBuilder<T> extends ArbitraryBuilder<T> {
@@ -33,5 +34,17 @@ public interface ExperimentalArbitraryBuilder<T> extends ArbitraryBuilder<T> {
 	<U> ArbitraryBuilder<T> customizeProperty(
 		TypedPropertySelector<U> propertySelector,
 		Function<CombinableArbitrary<? extends U>, CombinableArbitrary<? extends U>> combinableArbitraryCustomizer
+	);
+
+	@API(since = "1.0.14", status = Status.EXPERIMENTAL)
+	ArbitraryBuilder<T> resolveType(
+		String expression,
+		Class<?> implementationClass
+	);
+
+	@API(since = "1.0.14", status = Status.EXPERIMENTAL)
+	ArbitraryBuilder<T> resolveType(
+		PropertySelector propertySelector,
+		Class<?> implementationClass
 	);
 }

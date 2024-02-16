@@ -43,6 +43,7 @@ import com.navercorp.fixturemonkey.api.generator.ArbitraryContainerInfo;
 import com.navercorp.fixturemonkey.api.lazy.LazyArbitrary;
 import com.navercorp.fixturemonkey.api.matcher.MatcherOperator;
 import com.navercorp.fixturemonkey.api.property.Property;
+import com.navercorp.fixturemonkey.api.property.PropertyUtils;
 import com.navercorp.fixturemonkey.customizer.InnerSpecState.ManipulatorHolderSet;
 import com.navercorp.fixturemonkey.customizer.Values.Just;
 import com.navercorp.fixturemonkey.expression.MonkeyExpressionFactory;
@@ -120,6 +121,16 @@ public final class MonkeyManipulatorFactory {
 		return new ArbitraryManipulator(
 			monkeyExpressionFactory.from(expression).toNodeResolver(),
 			new NodeCustomizerManipulator<>(arbitraryCustomizer)
+		);
+	}
+
+	public <T> ArbitraryManipulator newResolvingTypeArbitraryManipulator(
+		String expression,
+		Class<T> implementationClass
+	) {
+		return new ArbitraryManipulator(
+			monkeyExpressionFactory.from(expression).toNodeResolver(),
+			node -> node.setResolvedProperty(PropertyUtils.toProperty(implementationClass))
 		);
 	}
 

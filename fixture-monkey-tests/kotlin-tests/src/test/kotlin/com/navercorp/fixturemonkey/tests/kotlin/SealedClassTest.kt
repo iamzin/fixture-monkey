@@ -21,7 +21,9 @@ package com.navercorp.fixturemonkey.tests.kotlin
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
+import com.navercorp.fixturemonkey.kotlin.giveMeExperimentalBuilder
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
+import com.navercorp.fixturemonkey.kotlin.into
 import com.navercorp.fixturemonkey.tests.TestEnvironment.TEST_COUNT
 import org.assertj.core.api.BDDAssertions.then
 import org.junit.jupiter.api.RepeatedTest
@@ -60,6 +62,38 @@ class SealedClassTest {
         then(actual).isNotNull
     }
 
+    @RepeatedTest(TEST_COUNT)
+    fun resolveType() {
+        val actual = SUT.giveMeExperimentalBuilder<SealedClass>()
+            .resolveType("$", SecondImplementedSealedClass::class.java)
+            .sample()
+
+        then(actual).isInstanceOf(SecondImplementedSealedClass::class.java)
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun resolveTypePropertyExp() {
+        val actual = SUT.giveMeExperimentalBuilder<SealedClassProperty>()
+            .resolveType(
+                "property",
+                SecondImplementedSealedClass::class.java
+            )
+            .sample()
+            .property
+
+        then(actual).isInstanceOf(SecondImplementedSealedClass::class.java)
+    }
+
+    @RepeatedTest(TEST_COUNT)
+    fun resolveTypeProperty() {
+        val actual = SUT.giveMeExperimentalBuilder<SealedClassProperty>()
+            .resolveType("property", SecondImplementedSealedClass::class.java)
+            .sample()
+            .property
+
+        then(actual).isInstanceOf(SecondImplementedSealedClass::class.java)
+    }
+
     sealed class SealedClass
 
     object ObjectSealedClass : SealedClass()
@@ -76,6 +110,11 @@ class SealedClassTest {
         val boolean: Boolean,
         val enum: Enum,
     ) : SealedClass()
+
+    class SecondImplementedSealedClass : SealedClass()
+
+    class SealedClassProperty(val property: SealedClass)
+
 
     enum class Enum { ONE, TWO, THREE }
 

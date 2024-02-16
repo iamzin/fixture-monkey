@@ -475,6 +475,25 @@ public final class DefaultArbitraryBuilder<T> implements ArbitraryBuilder<T>, Ex
 		return this;
 	}
 
+	@Override
+	public ArbitraryBuilder<T> resolveType(String expression, Class<?> implementationClass) {
+		context.addManipulator(
+			monkeyManipulatorFactory.newResolvingTypeArbitraryManipulator(expression, implementationClass)
+		);
+		return this;
+	}
+
+	@Override
+	public ArbitraryBuilder<T> resolveType(PropertySelector propertySelector, Class<?> implementationClass) {
+		context.addManipulator(
+			monkeyManipulatorFactory.newResolvingTypeArbitraryManipulator(
+				resolveExpression(toExpressionGenerator(propertySelector)),
+				implementationClass
+			)
+		);
+		return this;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Arbitrary<T> build() {
